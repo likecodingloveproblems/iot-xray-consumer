@@ -1,98 +1,142 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+---
+# XRay IoT Data Consumer
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A NestJS application that consumes IoT data from X-ray sensors, stores the signals in MongoDB, and uses RabbitMQ as a message broker. The project includes Docker and Docker Compose configurations for easy setup.
+---
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Features
 
-## Description
+- **NestJS** backend for processing IoT signals.
+- **MongoDB** for storing signal data.
+- **RabbitMQ** for message brokering between devices and the service.
+- Dockerized environment for easy deployment.
+- Supports environment configuration via `.env` file.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+---
 
-## Project setup
+## Prerequisites
 
-```bash
-$ pnpm install
-```
+- Docker & Docker Compose installed.
+- Node.js >= 18 (for local development if not using Docker).
+- [pnpm](https://pnpm.io/) installed (for local development).
 
-## Compile and run the project
+---
+
+## Getting Started
+
+### 1. Clone the repository
 
 ```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+git clone <repository-url>
+cd <repository-folder>
 ```
 
-## Run tests
+### 2. Environment variables
+
+Copy the example environment file:
 
 ```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+cp .env.example .env
 ```
 
-## Deployment
+Edit `.env` to configure your environment variables:
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+```env
+MONGO_URI=mongodb://root:example@mongo:27017/pantohealth?authSource=admin
+RABBITMQ_URI=amqp://user:password@rabbitmq:5672
+```
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+---
+
+### 3. Run with Docker Compose
 
 ```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
+docker compose pull
+docker compose up -d rabbitmq
+docker compose up -d mongo
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Services will start:
 
-## Resources
+- **MongoDB**: `localhost:27017`
+- **RabbitMQ Management UI**: `http://localhost:15672` (user/password from `.env`)
 
-Check out a few resources that may come in handy when working with NestJS:
+---
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### 4. Available Scripts (inside container or locally)
 
-## Support
+- **Development mode**:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+pnpm run start:dev
+```
 
-## Stay in touch
+- **Production mode**:
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```bash
+pnpm run start:prod
+```
 
-## License
+---
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### 5. API Documentation
+
+Swagger is available at:
+
+```
+http://localhost:3000/docs
+```
+
+It provides details of all endpoints, including creating and fetching signals.
+
+---
+
+### 6. Project Structure
+
+```
+src/
+├── rabbitmq/
+│   ├── rabbitmq.module.ts        # Connects to RabbitMQ and asserts queues
+│   └── rabbitmq.service.ts       # Provides RabbitMQ client for other modules
+│
+├── signals/
+│   ├── signals.controller.ts     # Exposes REST CRUD API for signals
+│   ├── signals.service.ts        # Consumes messages from xray_queue and processes them
+│   ├── signals.dto.ts            # DTOs for validation & Swagger
+│   └── schemas/signal.ts         # Mongoose schema for Signal
+│
+├── app.module.ts                 # Root module, imports RabbitMQModule and SignalsModule
+└── main.ts                       # Application bootstrap
+```
+
+---
+
+### 6.1 Responsibilities of Each Module
+
+#### RabbitMQ Module
+
+- Connects to RabbitMQ using the URI from `.env`.
+- Asserts necessary queues (e.g., `xray_queue`).
+- Provides a shared client that other modules (like `SignalsModule`) can use to subscribe or publish messages.
+
+#### Signals Module
+
+- Consumes messages from the `xray_queue`.
+- Processes incoming X-ray sensor data.
+- Stores signals in MongoDB (`Signal` schema).
+- Exposes REST CRUD endpoints so other services can query or manage signals.
+- Uses DTOs and Swagger for validation and API documentation.
+
+---
+
+### 8. Notes
+
+- Ensure RabbitMQ messages are JSON formatted so the consumer can parse them.
+- `dataLength` and `dataVolume` are automatically computed from the `data` array.
+- Swagger auto-generates documentation from DTOs using `@nestjs/swagger`.
+
+---
+
+### 9. License
+
+MIT © \[Your Name]

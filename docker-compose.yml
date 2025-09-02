@@ -33,9 +33,8 @@ services:
     depends_on:
       - mongo
       - rabbitmq
-    environment:
-      MONGO_URI: mongodb://root:example@mongo:27017/pantohealth?authSource=admin
-      RABBITMQ_URI: amqp://user:password@rabbitmq:5672
+    env_file:
+     - .env
     command: pnpm run start:dev
 
   prod:
@@ -47,9 +46,8 @@ services:
     depends_on:
       - mongo
       - rabbitmq
-    environment:
-      MONGO_URI: mongodb://root:example@mongo:27017/pantohealth?authSource=admin
-      RABBITMQ_URI: amqp://user:password@rabbitmq:5672
+    env_file:
+     - .env
     command: pnpm run start:prod
 
 volumes:
