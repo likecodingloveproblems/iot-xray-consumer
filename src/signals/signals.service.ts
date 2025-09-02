@@ -29,10 +29,17 @@ export class SignalsService implements OnModuleInit {
     );
   }
 
-  private async processIncomingSignal(msg: IncomingSignalMessage) {
+  private async processIncomingSignal(msg: any) {
     this.logger.log(`Received signal payload`);
-
-    const [deviceId, content] = Object.entries(msg)[0] as [string, XRayMessage];
+    const payload: string = msg.content.toString();
+    if (payload === '') {
+      return;
+    }
+    const messageObject: IncomingSignalMessage = JSON.parse(payload);
+    const [deviceId, content] = Object.entries(messageObject)[0] as [
+      string,
+      XRayMessage,
+    ];
 
     const data = content.data || [];
     const dataLength = data.length;
