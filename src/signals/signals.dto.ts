@@ -1,4 +1,4 @@
-import { IsString, IsNumber, Min, IsObject } from 'class-validator';
+import { IsString, IsNumber, Min, IsObject, IsArray } from 'class-validator';
 import { Signal } from './schemas/signal';
 
 export class CreateSignalDto {
@@ -9,7 +9,7 @@ export class CreateSignalDto {
   @Min(0)
   time: number;
 
-  @IsObject()
+  @IsArray()
   data: { time: number; x: number; y: number; speed: number }[];
 
   toSchema(): Signal {

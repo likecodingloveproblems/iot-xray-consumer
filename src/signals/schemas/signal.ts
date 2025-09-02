@@ -1,5 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, HydratedDocument } from 'mongoose';
+
+export type SignalDocument = HydratedDocument<Signal>;
 
 @Schema({ timestamps: true })
 export class Signal extends Document {

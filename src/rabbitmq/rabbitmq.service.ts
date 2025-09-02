@@ -1,4 +1,3 @@
-// rabbitmq.service.ts
 import {
   Injectable,
   OnModuleInit,
@@ -13,7 +12,7 @@ export class RabbitMQService implements OnModuleInit, OnModuleDestroy {
   private connection: amqp.Connection;
   private channel: amqp.Channel;
   private connectionString =
-    process.env.RABBITMQ_URI || 'amqp://localhost:5672';
+    process.env.RABBITMQ_URI || 'amqp://user:password@localhost:5672';
 
   private readonly queues = ['xray_queue'];
 
@@ -62,7 +61,6 @@ export class RabbitMQService implements OnModuleInit, OnModuleDestroy {
           } catch (error) {
             this.logger.error('Error processing message', error.stack);
             // here we must handle retry and dead letter queue
-
           }
         }
       },

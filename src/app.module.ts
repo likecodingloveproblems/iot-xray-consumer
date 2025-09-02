@@ -9,7 +9,10 @@ import { MongooseModule } from '@nestjs/mongoose';
   imports: [
     RabbitMQModule,
     SignalsModule,
-    MongooseModule.forRoot('mongodb://localhost:27017/yourdbname'),
+    MongooseModule.forRoot(
+      process.env.MONGO_URI ||
+        'mongodb://root:password@localhost:27017/pantohealth?authSource=admin',
+    ),
   ],
   controllers: [AppController],
   providers: [AppService],

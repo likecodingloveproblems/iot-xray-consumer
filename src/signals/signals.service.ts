@@ -1,8 +1,7 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Signal } from './schemas/signal';
-import { RabbitMQModule } from 'src/rabbitmq/rabbitmq.module';
+import { Signal, SignalDocument } from './schemas/signal';
 import { RabbitMQService } from 'src/rabbitmq/rabbitmq.service';
 
 type XRayMessage = {
@@ -37,15 +36,16 @@ export class SignalsService implements OnModuleInit {
 
     const signalDoc = new this.signalModel({
       deviceId,
-      time,
       data,
       dataLength,
       dataVolume,
+      timestamp: time,
     });
 
     await signalDoc.save();
   }
-  async create(data: any): Promise<Signal> {
+
+  async create(data: Partial<Signal>): Promise<Signal> {
     const doc = new this.signalModel(data);
     return doc.save();
   }
