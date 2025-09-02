@@ -1,12 +1,17 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Signal, SignalDocument } from './schemas/signal';
+import { Signal } from './schemas/signal';
 import { RabbitMQService } from 'src/rabbitmq/rabbitmq.service';
+import { CreateSignalDto } from './signals.dto';
+import { timeStamp } from 'console';
 
 type XRayMessage = {
   time: number;
   data: [[number, [number, number, number]]];
+};
+type IncomingSignalMessage = {
+  [deviceId: string]: XRayMessage;
 };
 
 @Injectable()
@@ -24,7 +29,7 @@ export class SignalsService implements OnModuleInit {
     );
   }
 
-  private async processIncomingSignal(msg: any) {
+  private async processIncomingSignal(msg: IncomingSignalMessage) {
     this.logger.log(`Received signal payload`);
 
     const [deviceId, content] = Object.entries(msg)[0] as [string, XRayMessage];
@@ -41,13 +46,18 @@ export class SignalsService implements OnModuleInit {
       dataVolume,
       timestamp: time,
     });
-
     await signalDoc.save();
   }
 
-  async create(data: Partial<Signal>): Promise<Signal> {
-    const doc = new this.signalModel(data);
-    return doc.save();
+  async create(data: CreateSignalDto): Promise<Signal> {
+    const signal = new this.signalModel({
+      deviceId: data.deviceId,
+      timestamp: data.timestamp,
+      dataLength: data.data.length,
+      dataVolume: JSON.stringify(data.data).length,
+      data: data.data,
+    });
+    return signal.save();
   }
 
   async findAll(skip = 0, limit = 50): Promise<Signal[]> {

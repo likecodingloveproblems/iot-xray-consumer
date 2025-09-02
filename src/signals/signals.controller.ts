@@ -19,7 +19,7 @@ export class SignalsController {
 
   @Post()
   async create(@Body() createSignalDto: CreateSignalDto): Promise<Signal> {
-    return this.signalsService.create(createSignalDto.toSchema());
+    return this.signalsService.create(createSignalDto)
   }
 
   @Get()

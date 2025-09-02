@@ -12,8 +12,8 @@ describe('SignalsController', () => {
   const mockSignal: Signal = {
     _id: '123',
     deviceId: 'device1',
-    time: 123456789,
-    data: { time: 123, x: 1.22, y: 2.33, speed: 12112.000000012 },
+    timestamp: 123456789,
+    data: [{ time: 123, x: 1.22, y: 2.33, speed: 12112.000000012 }],
   } as any;
 
   beforeEach(async () => {
@@ -39,12 +39,22 @@ describe('SignalsController', () => {
 
   describe('create', () => {
     it('should create a signal', async () => {
-      const dto = new CreateSignalDto();
-      dto.toSchema = jest.fn().mockReturnValue(mockSignal);
       service.create.mockResolvedValue(mockSignal);
 
-      const result = await controller.create(dto);
-
+      const result = await controller.create({
+        data: [
+          {
+            speed: 12112.000000012,
+            time: 123,
+            x: 1.22,
+            y: 2.33,
+          },
+        ],
+        deviceId: 'device1',
+        timestamp: 123456789,
+      });
+      // as we don't have access to the generated _id, we remove it before comparison
+      delete result._id;
       expect(service.create).toHaveBeenCalledWith(mockSignal);
       expect(result).toEqual(mockSignal);
     });

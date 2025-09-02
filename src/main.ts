@@ -8,10 +8,9 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   const config = new DocumentBuilder()
-    .setTitle('Users API')
-    .setDescription('NestJS tutorial API')
+    .setTitle('Signals API')
+    .setDescription('API documentation for the Signals service')
     .setVersion('1.0')
-    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);

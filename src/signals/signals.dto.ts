@@ -7,18 +7,8 @@ export class CreateSignalDto {
 
   @IsNumber()
   @Min(0)
-  time: number;
+  timestamp: number;
 
   @IsArray()
   data: { time: number; x: number; y: number; speed: number }[];
-
-  toSchema(): Signal {
-    return new Signal({
-      deviceId: this.deviceId,
-      timestamp: this.time,
-      dataLength: this.data.length,
-      dataVolume: JSON.stringify(this.data).length,
-      data: this.data,
-    });
-  }
 }
