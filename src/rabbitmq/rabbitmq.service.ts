@@ -39,15 +39,6 @@ export class RabbitMQService implements OnModuleInit, OnModuleDestroy {
     }
   }
 
-  async sendToQueue(queue: string, message: any) {
-    this.channel.sendToQueue(queue, Buffer.from(JSON.stringify(message)), {
-      persistent: true,
-    });
-    this.logger.log(
-      `Message sent to queue ${queue}: ${JSON.stringify(message)}`,
-    );
-  }
-
   private async consumeXRayQueue(callback: (msg: any) => void) {
     await this.channel.consume(
       'xray_queue',
