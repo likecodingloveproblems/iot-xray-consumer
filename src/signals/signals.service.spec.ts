@@ -114,11 +114,14 @@ describe('SignalsService (integration)', () => {
   });
 
   it('should process incoming signal from RabbitMQ', async () => {
-    const msg = {
+    const payload = {
       'dev-5': {
         time: 1000,
         data: [[1, [7, 8, 9]]],
       },
+    };
+    const msg = {
+      content: { toString: () => JSON.stringify(payload) },
     };
 
     // @ts-expect-error – private method is tested indirectly
